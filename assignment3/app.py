@@ -25,5 +25,6 @@ def get_movie_info():
         error_message = data.get('Error', 'An error occurred.')
         return render_template("error.html", error_message=error_message)
 
+from assignment3 import app 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
