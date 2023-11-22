@@ -1,44 +1,29 @@
 from flask import Flask, render_template, request
-
 import requests
 
- 
-app=Flask(__name__)
+app = Flask(__name__)
 
 @app.route('/')
-
 def homepage():
-
     return render_template("index.html")
 
- 
+@app.route("/movieinfo", methods=["POST"])
+def get_movie_info():
+    movie_name = request.form.get("movie")
+    imdb_api_key = request.form.get('appid')
 
-@app.route("/weatherapp", methods=["POST", "GET"])
+    # IMDb API URL
+    url = f"http://www.omdbapi.com/?t={movie_name}&apikey={imdb_api_key}"
 
-def get_weatherdata():
-
-    url="https://api.openweathermap.org/data/2.5/weather"
-
-    params ={
-
-        'q':request.form.get("city"),
-
-        'appid':request.form.get('appid'),
-
-        'units':request.form.get('units')
-
-    }
-
-    response=requests.get(url, params=params)
-
+    response = requests.get(url)
     data = response.json()
 
-    city=data['name']
+    # Check if the request was successful
+    if response.status_code == 200 and data['Response'] == 'True':
+        return render_template("movie_info.html", movie_data=data)
+    else:
+        error_message = data.get('Error', 'An error occurred.')
+        return render_template("error.html", error_message=error_message)
 
-    return f"data : {data}, city:{city}"
-
-
-
-if __name__=='__main__':
-
+if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
