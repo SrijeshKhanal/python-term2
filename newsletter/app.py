@@ -20,8 +20,8 @@ def get_newsletter_info():
     if response.status_code == 200 and data.get('status') == 'success':
         return render_template("newsletter_info.html", newsletter_data=data)
     else:
-        error_message = data.get('error', 'An error occurred.')
+        error_message = data.get('error', 'ERROR!!')
         return render_template("error.html", error_message=error_message)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5500)
